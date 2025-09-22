@@ -7,6 +7,7 @@ import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.UnifiedTodoResponse;
 import org.example.expert.domain.todo.service.TodoService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,17 @@ public class TodoController {
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<TodoResponse> getTodo(@PathVariable long todoId) {
         return ResponseEntity.ok(todoService.getTodo(todoId));
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<Page<UnifiedTodoResponse>> getUnifiedTodos(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) LocalDateTime startDateTime,
+            @RequestParam(required = false) LocalDateTime endDateTime,
+            @RequestParam(required = false) String nickname,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(todoService.getUnifiedTodos(title, startDateTime, endDateTime, nickname, page, size));
     }
 }
