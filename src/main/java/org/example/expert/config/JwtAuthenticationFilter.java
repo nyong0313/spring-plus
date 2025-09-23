@@ -43,7 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Authorization 헤더가 없거나 "Bearer "로 시작하지 않는 경우
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new ServletException("Authorization header missing");
+            chain.doFilter(httpRequest, httpResponse);
+            return;
         }
 
         String jwt = jwtUtil.substringToken(authorizationHeader);
