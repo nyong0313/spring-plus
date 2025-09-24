@@ -17,9 +17,13 @@ import java.util.Optional;
     @Query("SELECT t FROM Todo t LEFT JOIN FETCH t.user u ORDER BY t.modifiedAt DESC")
     Page<Todo> findAllByOrderByModifiedAtDesc(Pageable pageable);
 
-    @Query("SELECT t FROM Todo t " +
-            "WHERE :weather = t.weather " +
-            "AND (:startDateTime IS NULL OR t.modifiedAt >= :startDateTime)\n" +
-            "AND (:endDateTime IS NULL OR t.modifiedAt <= :endDateTime)")
+        @Query("""
+            SELECT t FROM Todo t
+            LEFT JOIN FETCH t.user u
+            WHERE :weather IS NULL OR t.weather = :weather
+            AND (:startDateTime IS NULL OR t.modifiedAt >= :startDateTime)
+            AND (:endDateTime IS NULL OR t.modifiedAt <= :endDateTime)
+            ORDER BY t.modifiedAt DESC
+            """)
     Page<Todo> findAllByWeatherAndModifiedAtBetween(String weather, LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
 }
